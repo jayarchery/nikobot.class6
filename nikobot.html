@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Niko Bot</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#141e30,#243b55);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.chatbox{
+width:380px;
+background:white;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+overflow:hidden;
+}
+
+.header{
+background:#111;
+color:white;
+padding:15px;
+text-align:center;
+font-size:20px;
+}
+
+.messages{
+height:300px;
+padding:10px;
+overflow-y:auto;
+font-size:14px;
+}
+
+.inputbox{
+display:flex;
+border-top:1px solid #ccc;
+}
+
+input{
+flex:1;
+padding:10px;
+border:none;
+outline:none;
+}
+
+button{
+background:#ff512f;
+color:white;
+border:none;
+padding:10px 15px;
+cursor:pointer;
+}
+
+.mic{
+background:#009688;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="chatbox">
+
+<div class="header">
+🤖 Niko Bot – Fire Robot Assistant
+</div>
+
+<div class="messages" id="chat">
+<p><b>Niko Bot:</b> Say <b>"Hey Niko Bot"</b> and ask your question!</p>
+</div>
+
+<div class="inputbox">
+
+<input type="text" id="userInput" placeholder="Say: Hey Niko Bot ...">
+
+<button onclick="reply()">Send</button>
+
+<button class="mic" onclick="voiceInput()">🎤</button>
+
+</div>
+
+</div>
+
+<script>
+
+function speak(text){
+let speech=new SpeechSynthesisUtterance(text);
+speech.lang="en-US";
+speechSynthesis.speak(speech);
+}
+
+function processInput(input){
+
+let lower=input.toLowerCase();
+let chat=document.getElementById("chat");
+
+chat.innerHTML += "<p><b>You:</b> "+input+"</p>";
+
+if(!lower.startsWith("hey niko bot")){
+let msg="Please start with Hey Niko Bot";
+chat.innerHTML += "<p><b>Niko Bot:</b> "+msg+"</p>";
+speak(msg);
+return;
+}
+
+let question=lower.replace("hey niko bot","");
+
+let response="I am not sure about that yet.";
+
+if(question.includes("fire robot") || question.includes("fire extinguishing robot")){
+response="The fire extinguishing robot detects fire using flame sensors and sprays water using a water pump.";
+}
+
+else if(question.includes("sensor")){
+response="The robot uses flame sensor, smoke sensor, and temperature sensor.";
+}
+
+else if(question.includes("how it works")){
+response="The robot detects fire using sensors, moves toward the fire, and activates the water pump.";
+}
+
+else if(question.includes("purpose")){
+response="The purpose of this robot is to detect fire early and extinguish it automatically.";
+}
+
+else if(question.includes("html")){
+response="HTML stands for HyperText Markup Language. It is used to create web pages.";
+}
+
+else if(question.includes("computer")){
+response="A computer is an electronic device that processes data and produces output.";
+}
+
+chat.innerHTML += "<p><b>Niko Bot:</b> "+response+"</p>";
+
+speak(response);
+
+document.getElementById("userInput").value="";
+
+}
+
+function reply(){
+
+let input=document.getElementById("userInput").value;
+
+processInput(input);
+
+}
+
+function voiceInput(){
+
+let recognition=new webkitSpeechRecognition();
+
+recognition.lang="en-US";
+
+recognition.onresult=function(event){
+
+let speech=event.results[0][0].transcript;
+
+processInput(speech);
+
+};
+
+recognition.start();
+
+}
+
+</script>
+
+</body>
+</html>
